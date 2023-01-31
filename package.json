@@ -14,10 +14,12 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"typescript": "^4.9.4",
+		"axios": "^1.2.3",
 		"dotenv": "^16.0.3",
+		"moment": "^2.29.4",
 		"mongoose": "^6.8.3",
-		"node-telegram-bot-api": "^0.60.0"
+		"node-telegram-bot-api": "^0.60.0",
+		"typescript": "^4.9.4"
 	},
 	"devDependencies": {
 		"@types/node": "^18.11.18",
@@ -29,6 +31,7 @@
 		"nodemon": "^2.0.20",
 		"prettier": "^2.8.1",
 		"rimraf": "^3.0.2",
-		"ts-node": "^10.9.1"
+		"ts-node": "^10.9.1",
+		"tsconfig-paths": "^4.1.2"
 	}
 }

@@ -2,12 +2,35 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 import TelegramBot from 'node-telegram-bot-api';
 
-import * as handler from './handlers';
-import * as commands from './commands';
+import * as handler from '@/handlers';
+import * as commands from '@/commands';
+import { Timer } from '@/controllers';
 import { config } from './config';
 import { COMMANDS, HANDLERS } from './enums';
 
-import { generateCommandRegExp as genCommand } from './utils/regexHelper';
+import Users from '@/models/users';
+import Polls from '@/models/polls';
+import Chats from '@/models/chats';
+
+import {
+	generateClosedCommandRegExp as closedCommand,
+	generateMatchedCommandRegExp as matchedCommand,
+} from './utils';
+
+// const SECONDS = 30;
+// const MINUTES = 0;
+// const HOURS = 0;
+const { SECONDS, MINUTES, HOURS } = config.timer;
+const time = () =>
+	HOURS * 60 * 60 * 1000 + MINUTES * 60 * 1000 + SECONDS * 1000;
+
+const timer = Timer.getInstance();
+
+timer.registerCallbacks([], time());
+timer.start();
+
+// console.log(moment().day('Wednesday').hour(21).minute(1).second(0));
+// console.log(moment().hour(22).minute(11).second(0).unix() > moment().unix());
 
 const env = process.env;
 if (!env.BOT_TOKEN) throw new Error('We need to provide token');
@@ -21,24 +44,24 @@ mongoose
 	.connect(env.MONGODB_URI, config.mongodb)
 	.then(() => {
 		console.info('Database connected');
+
 		//! Commands
-		bot.onText(genCommand(COMMANDS.start), commands.start(bot));
-		bot.onText(genCommand(COMMANDS.stop), commands.stop(bot));
-		// bot.onText(genCommand(COMMANDS.users), commands.users(bot));
+		bot.onText(closedCommand(COMMANDS.start), commands.start(bot));
+		// bot.onText(closedCommand(COMMANDS.stop), commands.stop(bot));
+		// bot.onText(matchedCommand(COMMANDS.getChat), commands.getChat(bot));
+		// bot.onText(/\/get_chat (.+)/, commands.getChat(bot));
+		// bot.onText(genCommand(COMANDS.users), commands.users(bot));
 
 		//! Handlers
 		bot.on(HANDLERS.pollAnswer, handler.pollAnswer);
+		// @ts-ignore
+		bot.on(HANDLERS.poll, handler.poll);
 		// bot.on('callback_query', handler.callbackQuery(bot));
 		bot.on(HANDLERS.pollingError, handler.botError);
 		bot.on(HANDLERS.error, handler.botError);
 
-		console.info(`\u{1F41D} ${env.BOT_NAME} started successfully`);
+		console.info(
+			`\t⚽ ${env.BOT_NAME} started successfully\n\tfind them at https://t.me/${env.TELEGRAM_BOT_NAME}`
+		);
 	})
 	.catch((error: Error) => console.error(error));
-
-//! END POLL EVENT
-// bot.on('poll', (msg) => {
-// 	console.log('POLL ENDED');
-// 	console.log(msg);
-// });
-// bot.on('callback_query', handler.callbackQuery);

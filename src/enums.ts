@@ -5,6 +5,7 @@ export enum COMMANDS {
 	endPoll = 'end_poll',
 	randomizeTeams = 'random_teams',
 	users = 'users',
+	getChat = 'get_chat',
 }
 
 export enum HANDLERS {
