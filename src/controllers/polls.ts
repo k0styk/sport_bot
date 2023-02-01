@@ -65,12 +65,12 @@ export class PollsController {
 					const timer = Timer.getInstance();
 					timer.removeCustomCallback(stoppedPoll.id);
 					if (stoppedPoll.total_voter_count >= config.polls.totalVoterCount) {
-						if (
-							stoppedPoll.options[poll.correctOptionId]?.voter_count >=
-							config.polls.totalVoterCount
-						) {
-							// TODO: Random
-						}
+						// if (
+						// 	stoppedPoll.options[poll.correctOptionId]?.voter_count >=
+						// 	config.polls.totalVoterCount
+						// ) {
+						// 	// TODO: Random
+						// }
 					}
 				}
 

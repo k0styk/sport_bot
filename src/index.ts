@@ -17,9 +17,6 @@ import {
 	generateMatchedCommandRegExp as matchedCommand,
 } from './utils';
 
-// const SECONDS = 30;
-// const MINUTES = 0;
-// const HOURS = 0;
 const { SECONDS, MINUTES, HOURS } = config.timer;
 const time = () =>
 	HOURS * 60 * 60 * 1000 + MINUTES * 60 * 1000 + SECONDS * 1000;
@@ -29,19 +26,16 @@ const timer = Timer.getInstance();
 timer.registerCallbacks([], time());
 timer.start();
 
-// console.log(moment().day('Wednesday').hour(21).minute(1).second(0));
-// console.log(moment().hour(22).minute(11).second(0).unix() > moment().unix());
-
 const env = process.env;
+const mongoUrl = env.PROD_MONGODB_URL || env.MONGODB_URI;
 if (!env.BOT_TOKEN) throw new Error('We need to provide token');
-if (!env.MONGODB_URI)
-	throw new Error('We need to provide mongo connection string');
+if (!mongoUrl) throw new Error('We need to provide mongo connection string');
 
 const bot = new TelegramBot(env.BOT_TOKEN, config.bot);
 mongoose.set('strictQuery', true);
 
 mongoose
-	.connect(env.MONGODB_URI, config.mongodb)
+	.connect(mongoUrl, config.mongodb)
 	.then(() => {
 		console.info('Database connected');
 

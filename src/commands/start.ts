@@ -17,7 +17,8 @@ export const start = (bot: TelegramBot) => async (message: Message) => {
 	const { chat, from } = message;
 
 	if (from?.id) {
-		if (!config.admins.ids.includes(from.id)) return;
+		// @ts-ignore
+		if (!config.admins.ids.includes(String(from.id))) return;
 		const timer = Timer.getInstance();
 		const chatId = message.chat.id;
 
